@@ -1,0 +1,50 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+{% block title %}
+    Пост
+{% endblock title %}
+    
+
+{% block header %}
+    {{ post.title }}
+{% endblock header %}
+    
+
+{% block body %}
+<div class="container mx-auto">
+    <div class="card mb-3 border-info" style="text-decoration: none;">
+        <div class="card-header">
+            <h5>{{ post.title }}</h5>
+        </div>
+        <div class="card-body">
+            <img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top" alt="...">
+            <p class="card-text">{{ post.post_text }}</p>
+            <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
+            <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
+        </div>
+        <div class="card-header">
+            <h5>Комментарии {{ comments|length }}</h5>
+        </div>
+        <div class="d-flex align-items-start flex-column mx-3">
+            <ul class="list-group list-group-flush">
+            
+                {% for comment in comments %}
+                <li class="list-group-item">
+                    {{ comment.comment_text }}
+                </li>
+                {% endfor %}
+
+            </ul>
+                <form action="{% url 'blog:comment' post.id %}" class="w-50" method="POST">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <textarea name="comment_text" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                        <label for="floatingTextarea">Комментарий</label>
+                    </div>
+                    <button class="btn btn-primary mb-3">Отправить</button>
+                </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+    
