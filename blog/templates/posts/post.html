@@ -12,24 +12,26 @@
 
 {% block body %}
 <div class="container mx-auto">
-    <div class="card mb-3 border-info" style="text-decoration: none;">
+    <div class=" border card mb-3 border-black w-75 mx-auto bg-body-secondary" style="text-decoration: none;">
         <div class="card-header">
+            <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
             <h5>{{ post.title }}</h5>
         </div>
         <div class="card-body">
-            <img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top" alt="...">
+            <div class="container w-75">
+                <img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top rounded" alt="...">
+            </div>
             <p class="card-text">{{ post.post_text }}</p>
             <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
-            <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
         </div>
         <div class="card-header">
             <h5>Комментарии {{ comments|length }}</h5>
         </div>
-        <div class="d-flex align-items-start flex-column mx-3">
+        <div class="d-flex align-items-start flex-column mx-3 my-3">
             <ul class="list-group list-group-flush">
             
                 {% for comment in comments %}
-                <li class="list-group-item">
+                <li class="border list-group-item rounded-top rounded-start border-black my-1">
                     {{ comment.comment_text }}
                 </li>
                 {% endfor %}
@@ -37,7 +39,7 @@
             </ul>
                 <form action="{% url 'blog:comment' post.id %}" class="w-50" method="POST">
                     {% csrf_token %}
-                    <div class="form-floating mb-3">
+                    <div class="form-floating my-3">
                         <textarea name="comment_text" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
                         <label for="floatingTextarea">Комментарий</label>
                     </div>
