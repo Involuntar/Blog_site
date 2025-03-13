@@ -13,44 +13,50 @@
 
 {% block body %}
 
-<div class="container mx-auto">
+<div class="container mx-auto d-flex flex-column align-items-center">
+
+    {% if posts.paginator.num_pages > 1 %}
     <nav aria-label="...">
         <ul class="pagination">
-            
+
             {% if posts.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ posts.previous_page_number }}">Предыдущая</a>
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link">Предыдущая</a>
+                <a class="page-link">&laquo; Предыдущая</a>
             </li>
             {% endif %}
-            
+
             {% for page in range %}
-            
+
             {% if posts.number == forloop.counter %}
-            <li class="page-item active"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            <li class="page-item active"><a class="page-link"
+                    href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% else %}
             <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% endif %}
+
             {% endfor %}
-            
-            
+
+
             {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая</a>
+                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая &raquo;</a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link">Следующая</a>
+                <a class="page-link">Следующая &raquo;</a>
             </li>
             {% endif %}
         </ul>
     </nav>
+    {% endif %}
+
     {% for post in posts %}
-    <a href="{% url 'blog:post_get' post.id %}" style="text-decoration: none;">
-        <div class="border card mb-3 bg-body-secondary border-black w-75 mx-auto">
+    <div class="border card mb-3 bg-body-secondary border-black w-75 mx-auto">
+        <a class="text-black" href="{% url 'blog:post_get' post.id %}" style="text-decoration: none;">
             <div class="card-header">
                 <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
                 <h5>{{ post.title }}</h5>
@@ -66,9 +72,48 @@
                 <p class="card-text">{{ post.post_text }}</p>
                 <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
             </div>
-        </div>
-    </a>
+        </a>
+    </div>
+
     {% endfor %}
+    {% if posts.paginator.num_pages > 1 %}
+    <nav aria-label="...">
+        <ul class="pagination">
+
+            {% if posts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">&laquo; Предыдущая</a>
+            </li>
+            {% endif %}
+
+            {% for page in range %}
+
+            {% if posts.number == forloop.counter %}
+            <li class="page-item active"><a class="page-link"
+                    href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            {% endif %}
+
+            {% endfor %}
+
+
+            {% if posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая &raquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Следующая &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
 
 {% endblock body %}

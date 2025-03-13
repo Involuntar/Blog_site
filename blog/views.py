@@ -22,9 +22,14 @@ def index(request):
 def post_get(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.filter(post=post_id)
+    paginator = Paginator(comments, 10)
+    page_number = request.GET.get('page')
+    pages = math.ceil(len(comments) / 10)
+    comments_on_page = paginator.get_page(page_number)
     return render(request, 'posts/post.html', {
         'post': post,
-        'comments': comments
+        'comments': comments_on_page,
+        'range': range(pages)
     })
 
 def comment_create(request, post_id):

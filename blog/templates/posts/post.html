@@ -1,27 +1,31 @@
 {% extends 'posts/base.html' %}
 {% load static %}
 {% block title %}
-    Пост
+Пост
 {% endblock title %}
-    
+
 
 {% block header %}
-    {{ post.title }}
+{{ post.title }}
 {% endblock header %}
-    
+
 
 {% block body %}
 <div class="container mx-auto">
-    <a class="btn btn-primary" href="{{request.META.HTTP_REFERER}}">Назад</a>
-    <div class=" border card mb-3 border-black w-75 mx-auto bg-body-secondary" style="text-decoration: none;">
+    <a class="btn btn-primary" href="{% url 'blog:index' %}">Назад</a>
+    <div class="border card mb-3 border-black w-75 mx-auto bg-body-secondary" style="text-decoration: none;">
         <div class="card-header">
             <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
             <h5>{{ post.title }}</h5>
         </div>
         <div class="card-body">
+
+            {% if post.image %}
             <div class="container w-75">
                 <img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top rounded" alt="...">
             </div>
+            {% endif %}
+
             <p class="card-text">{{ post.post_text }}</p>
             <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
         </div>
@@ -29,8 +33,49 @@
             <h5>Комментарии {{ comments|length }}</h5>
         </div>
         <div class="d-flex align-items-start flex-column mx-3 my-3">
+
+            {% if comments.paginator.num_pages > 1 %}
+            <nav aria-label="...">
+                <ul class="pagination">
+
+                    {% if comments.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">&laquo; Предыдущая</a>
+                    </li>
+                    {% endif %}
+
+                    {% for page in range %}
+
+                    {% if comments.number == forloop.counter %}
+                    <li class="page-item active"><a class="page-link"
+                            href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link"
+                            href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    {% endif %}
+
+                    {% endfor %}
+
+
+                    {% if comments.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ comments.next_page_number }}">Следующая &raquo;</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">Следующая &raquo;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
             <ul class="list-group list-group-flush">
-            
+
                 {% for comment in comments %}
                 <li class="border list-group-item rounded-top rounded-start border-black my-1">
                     {{ comment.comment_text }}
@@ -38,16 +83,16 @@
                 {% endfor %}
 
             </ul>
-                <form action="{% url 'blog:comment_create' post.id %}" class="w-50" method="POST">
-                    {% csrf_token %}
-                    <div class="form-floating my-3">
-                        <textarea name="comment_text" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-                        <label for="floatingTextarea">Комментарий</label>
-                    </div>
-                    <button class="btn btn-primary mb-3">Отправить</button>
-                </form>
+            <form action="{% url 'blog:comment_create' post.id %}" class="w-50" method="POST">
+                {% csrf_token %}
+                <div class="form-floating my-3">
+                    <textarea name="comment_text" class="form-control" placeholder="Leave a comment here"
+                        id="floatingTextarea"></textarea>
+                    <label for="floatingTextarea">Комментарий</label>
+                </div>
+                <button class="btn btn-primary mb-3">Отправить</button>
+            </form>
         </div>
     </div>
 </div>
 {% endblock body %}
-    
