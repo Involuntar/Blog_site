@@ -2,36 +2,73 @@
 {% load static %}
 
 {% block title %}
-    Посты
+Посты
 {% endblock title %}
 
 
 {% block header %}
-    Посты
+Посты
 {% endblock header %}
-    
+
 
 {% block body %}
 
-    <div class="container mx-auto">
-        {% for post in posts %}
-        <a href="{% url 'blog:post' post.id %}" style="text-decoration: none;">
-            <div class="border card mb-3 bg-body-secondary border-black w-75 mx-auto">
-                <div class="card-header">
-                    <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
-                    <h5>{{ post.title }}</h5>
-                </div>
-                <div class="card-body">
-                    <div class="container w-75">
-                        <img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top rounded" alt="...">
-                    </div>
-                    <p class="card-text">{{ post.post_text }}</p>
-                    <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
-                </div>
+<div class="container mx-auto">
+    <nav aria-label="...">
+        <ul class="pagination">
+            
+            {% if posts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">Предыдущая</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Предыдущая</a>
+            </li>
+            {% endif %}
+            
+            {% for page in range %}
+            
+            {% if posts.number == forloop.counter %}
+            <li class="page-item active"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            {% endif %}
+            {% endfor %}
+            
+            
+            {% if posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Следующая</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% for post in posts %}
+    <a href="{% url 'blog:post_get' post.id %}" style="text-decoration: none;">
+        <div class="border card mb-3 bg-body-secondary border-black w-75 mx-auto">
+            <div class="card-header">
+                <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
+                <h5>{{ post.title }}</h5>
             </div>
-        </a>
-        {% endfor %}
-    </div>
-        
+            <div class="card-body">
+
+                {% if post.image %}
+                <div class="container w-75">
+                    <img src="{{ MEDIA_URL }}{{ post.image }}" class="card-img-top rounded" alt="...">
+                </div>
+                {% endif %}
+
+                <p class="card-text">{{ post.post_text }}</p>
+                <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
 {% endblock body %}
-    
