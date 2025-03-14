@@ -14,7 +14,15 @@
 {% block body %}
 
 <div class="container mx-auto d-flex flex-column align-items-center">
-
+    <form class="row g-3" action="{% url 'blog:index' %}" method="GET">
+        <div class="col-auto">
+          <label for="search" class="visually-hidden">Поиск</label>
+          <input name="search" type="text" class="form-control" id="search" placeholder="Поиск" value="{{ request.GET.search }}">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary mb-3">Найти</button>
+        </div>
+      </form>
     {% if posts.paginator.num_pages > 1 %}
     <nav aria-label="...">
         <ul class="pagination">

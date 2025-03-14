@@ -9,7 +9,11 @@ from blog.models import Comment, Post
 
 # Create your views here.
 def index(request):
-    posts = Post.objects.all()
+    if request.GET.get('search'):
+        posts = Post.objects.filter(title=request.GET.get('search')) | Post.objects.filter(author=request.GET.get('search')) | \
+        Post.objects.filter(post_text=request.GET.get('search'))
+    else:
+        posts = Post.objects.all()
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     pages = math.ceil(len(posts) / 5)
