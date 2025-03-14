@@ -14,7 +14,7 @@
 {% block body %}
 
 <div class="container mx-auto d-flex flex-column align-items-center">
-    <form class="row g-3" action="{% url 'blog:index' %}" method="GET">
+    <form name="filters" class="row g-3" action="{% url 'blog:index' %}" method="GET">
         <div class="col-auto">
           <label for="search" class="visually-hidden">Поиск</label>
           <input name="search" type="search" class="form-control" id="search" placeholder="Поиск" value="{{ request.GET.search }}">
@@ -22,7 +22,16 @@
         <div class="col-auto">
           <button type="submit" class="btn btn-primary mb-3">Найти</button>
         </div>
-      </form>
+        <div class="btn-group mb-3" role="group" aria-label="Basic checkbox toggle button group">
+            
+            {% for category in categories %}
+            <input onclick="filters.submit()" name="category" type="checkbox" class="btn-check"{% if category.id in selected_categories %} checked{% endif %}
+            id="category{{forloop.counter}}" autocomplete="off" value="{{ category.id }}">
+            <label class="btn btn-outline-primary" for="category{{forloop.counter}}">{{ category.category_name }}</label>
+            {% endfor %}
+
+        </div>
+    </form>
     {% if posts.paginator.num_pages > 1 %}
     <nav aria-label="...">
         <ul class="pagination">
@@ -68,6 +77,11 @@
             <div class="card-header">
                 <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
                 <h5>{{ post.title }}</h5>
+                
+                {% if post.category %}
+                <p class="card-text"><small class="text-body-secondary">#{{ post.category }}</small></p>
+                {% endif %}
+                    
             </div>
             <div class="card-body">
 

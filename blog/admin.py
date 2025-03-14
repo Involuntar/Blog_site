@@ -8,5 +8,9 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(models.Comment, CommentAdmin)
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'author', 'post_text', 'likes', 'date']
+    list_display = ['id', 'author', 'post_text', 'likes', 'date', 'category']
 admin.site.register(models.Post, PostAdmin)
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'category_name']
+admin.site.register(models.Category, CategoryAdmin)

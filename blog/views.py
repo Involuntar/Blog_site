@@ -5,23 +5,34 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.core.paginator import Paginator
 
-from blog.models import Comment, Post
+from blog.models import Category, Comment, Post
 
 # Create your views here.
 def index(request):
+    posts = Post.objects.all()
     if request.GET.get('search'):
-        posts = Post.objects.filter(title__contains=request.GET.get('search')) | Post.objects.filter(author__contains=request.GET.get('search')) | \
-        Post.objects.filter(post_text__contains=request.GET.get('search'))
-    else:
-        posts = Post.objects.all()
+        posts = posts.filter(title__contains=request.GET.get('search')) | posts.filter(author__contains=request.GET.get('search')) | \
+        posts.filter(post_text__contains=request.GET.get('search'))
+
+    if request.GET.getlist('category'):
+        posts = posts.filter(category_id__in=request.GET.getlist('category'))
+
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     pages = math.ceil(len(posts) / 5)
     posts_on_page = paginator.get_page(page_number)
-    return render(request, 'posts/index.html', {
+    categories = Category.objects.all()
+
+    args = {
         'posts': posts_on_page,
-        'range': range(pages)
-    })
+        'range': range(pages),
+        'categories': categories,
+    }
+
+    if request.GET.getlist('category'):
+        args['selected_categories'] = [ int(cat) for cat in request.GET.getlist('category') ]
+
+    return render(request, 'posts/index.html', args)
 
 def post_get(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
