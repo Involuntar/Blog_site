@@ -10,8 +10,8 @@ from blog.models import Comment, Post
 # Create your views here.
 def index(request):
     if request.GET.get('search'):
-        posts = Post.objects.filter(title=request.GET.get('search')) | Post.objects.filter(author=request.GET.get('search')) | \
-        Post.objects.filter(post_text=request.GET.get('search'))
+        posts = Post.objects.filter(title__contains=request.GET.get('search')) | Post.objects.filter(author__contains=request.GET.get('search')) | \
+        Post.objects.filter(post_text__contains=request.GET.get('search'))
     else:
         posts = Post.objects.all()
     paginator = Paginator(posts, 5)
