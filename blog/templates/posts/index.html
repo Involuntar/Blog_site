@@ -38,7 +38,7 @@
 
             {% if posts.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -50,9 +50,14 @@
 
             {% if posts.number == forloop.counter %}
             <li class="page-item active"><a class="page-link"
-                    href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% else %}
-            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            <li class="page-item"
+            {% if posts.paginator.num_pages > 3 and forloop.counter != 1 and forloop.counter != posts.paginator.num_pages %}
+            hidden 
+            {% endif %}>
+                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a>
+            </li>
             {% endif %}
 
             {% endfor %}
@@ -60,7 +65,7 @@
 
             {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая &raquo;</a>
+                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.next_page_number }}">Следующая &raquo;</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -104,7 +109,7 @@
 
             {% if posts.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -116,9 +121,14 @@
 
             {% if posts.number == forloop.counter %}
             <li class="page-item active"><a class="page-link"
-                    href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% else %}
-            <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            <li class="page-item"
+            {% if posts.paginator.num_pages > 3 and forloop.counter != 1 and forloop.counter != posts.paginator.num_pages %}
+            hidden 
+            {% endif %}>
+                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a>
+            </li>
             {% endif %}
 
             {% endfor %}
@@ -126,7 +136,7 @@
 
             {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая &raquo;</a>
+                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.next_page_number }}">Следующая &raquo;</a>
             </li>
             {% else %}
             <li class="page-item disabled">

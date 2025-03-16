@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.views import View
 
 from blog.models import Category, Comment, Post
 
@@ -37,14 +38,15 @@ def index(request):
 def post_get(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.filter(post=post_id)
-    paginator = Paginator(comments, 10)
+    paginator = Paginator(comments, 4)
     page_number = request.GET.get('page')
-    pages = math.ceil(len(comments) / 10)
+    pages = math.ceil(len(comments) / 4)
     comments_on_page = paginator.get_page(page_number)
     return render(request, 'posts/post.html', {
         'post': post,
         'comments': comments_on_page,
-        'range': range(pages)
+        'range': range(pages),
+        'amount_comments': len(comments)
     })
 
 def comment_create(request, post_id):

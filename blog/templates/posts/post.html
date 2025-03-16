@@ -1,7 +1,7 @@
 {% extends 'posts/base.html' %}
 {% load static %}
 {% block title %}
-Пост
+{{ post.title }}
 {% endblock title %}
 
 
@@ -12,8 +12,8 @@
 
 {% block body %}
 <div class="container mx-auto">
-    <a class="btn btn-primary" href="{% url 'blog:index' %}">Назад</a>
-    <div class="border card mb-3 border-black w-75 mx-auto bg-body-secondary" style="text-decoration: none;">
+    <a class="btn btn-primary mb-3" href="{% url 'blog:index' %}">Назад</a>
+    <div class="border card mb-3 border-black mx-auto bg-body-secondary" style="text-decoration: none;">
         <div class="card-header">
             <p class="card-text"><small class="text-body-secondary">{{ post.author }}</small></p>
             <h5>{{ post.title }}</h5>
@@ -30,21 +30,21 @@
             <p class="card-text"><small class="text-body-secondary">{{ post.date }}</small></p>
         </div>
         <div class="card-header">
-            <h5>Комментарии {{ comments|length }}</h5>
+            <h5>Комментарии {{ amount_comments }}</h5>
         </div>
         <div class="d-flex align-items-start flex-column mx-3 my-3">
 
             {% if comments.paginator.num_pages > 1 %}
             <nav aria-label="...">
-                <ul class="pagination">
+                <ul class="pagination pagination-sm">
 
                     {% if comments.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+                        <a class="page-link" href="?page={{ comments.previous_page_number }}">&laquo;Предыдущая</a>
                     </li>
                     {% else %}
                     <li class="page-item disabled">
-                        <a class="page-link">&laquo; Предыдущая</a>
+                        <a class="page-link">&laquo;Предыдущая</a>
                     </li>
                     {% endif %}
 
@@ -54,8 +54,11 @@
                     <li class="page-item active"><a class="page-link"
                             href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
                     {% else %}
-                    <li class="page-item"><a class="page-link"
-                            href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    <li class="page-item"
+                        {% if comments.paginator.num_pages > 3 and forloop.counter != 1 and forloop.counter != comments.paginator.num_pages %}
+                        hidden 
+                        {% endif %}>
+                    <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
                     {% endif %}
 
                     {% endfor %}
@@ -63,11 +66,11 @@
 
                     {% if comments.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ comments.next_page_number }}">Следующая &raquo;</a>
+                        <a class="page-link" href="?page={{ comments.next_page_number }}">Следующая&raquo;</a>
                     </li>
                     {% else %}
                     <li class="page-item disabled">
-                        <a class="page-link">Следующая &raquo;</a>
+                        <a class="page-link">Следующая&raquo;</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -77,9 +80,15 @@
             <ul class="list-group list-group-flush">
 
                 {% for comment in comments %}
-                <li class="border list-group-item rounded-top rounded-start border-black my-1">
-                    {{ comment.comment_text }}
-                </li>
+                <div class="card my-1">
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p>{{comment.comment_text}}</p>
+                            <footer class="blockquote-footer"><cite title="Source Title">{{ comment.date }}</cite>
+                            </footer>
+                        </blockquote>
+                    </div>
+                </div>
                 {% endfor %}
 
             </ul>
