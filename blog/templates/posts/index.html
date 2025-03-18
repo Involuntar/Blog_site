@@ -23,7 +23,10 @@
           <button type="submit" class="btn btn-primary mb-3">Найти</button>
         </div>
         <div class="btn-group mb-3" role="group" aria-label="Basic checkbox toggle button group">
-            
+            {{selected_categories}}
+            {% for c in selected_categories %}
+
+            {% endfor %}
             {% for category in categories %}
             <input onclick="filters.submit()" name="category" type="checkbox" class="btn-check"{% if category.id in selected_categories %} checked{% endif %}
             id="category{{forloop.counter}}" autocomplete="off" value="{{ category.id }}">
@@ -38,7 +41,7 @@
 
             {% if posts.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+                <a class="page-link" href="{{category_url}}{% if category_url %}{% else %}?{% endif %}page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -50,13 +53,13 @@
 
             {% if posts.number == forloop.counter %}
             <li class="page-item active"><a class="page-link"
-                    href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    href="{{category_url}}{% if category_url %}{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% else %}
             <li class="page-item"
             {% if posts.paginator.num_pages > 3 and forloop.counter != 1 and forloop.counter != posts.paginator.num_pages %}
             hidden 
             {% endif %}>
-                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                <a class="page-link" href="{{category_url}}{% if category_url %}{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a>
             </li>
             {% endif %}
 
@@ -65,7 +68,7 @@
 
             {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.next_page_number }}">Следующая &raquo;</a>
+                <a class="page-link" href="{{category_url}}{% if category_url %}{% else %}?{% endif %}page={{ posts.next_page_number }}">Следующая &raquo;</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -109,7 +112,7 @@
 
             {% if posts.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo; Предыдущая</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -121,13 +124,13 @@
 
             {% if posts.number == forloop.counter %}
             <li class="page-item active"><a class="page-link"
-                    href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                    href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% else %}
             <li class="page-item"
             {% if posts.paginator.num_pages > 3 and forloop.counter != 1 and forloop.counter != posts.paginator.num_pages %}
             hidden 
             {% endif %}>
-                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
             </li>
             {% endif %}
 
@@ -136,7 +139,8 @@
 
             {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="{{request.get_full_path}}{% if request.GET %}&{% else %}?{% endif %}page={{ posts.next_page_number }}">Следующая &raquo;</a>
+                
+                <a class="page-link" href="?page={{ posts.next_page_number }}">Следующая &raquo;</a>
             </li>
             {% else %}
             <li class="page-item disabled">

@@ -32,7 +32,10 @@ def index(request):
 
     if request.GET.getlist('category'):
         args['selected_categories'] = [ int(cat) for cat in request.GET.getlist('category') ]
-
+        get_str="?"
+        for c in args['selected_categories']:
+            get_str += f"category={c}&"
+        args['category_url'] = get_str
     return render(request, 'posts/index.html', args)
 
 def post_get(request, post_id):
